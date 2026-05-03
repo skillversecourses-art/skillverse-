@@ -51,7 +51,7 @@ const Hero: React.FC = () => {
 
         <div className="hero-right">
           <div className="hero-img-wrap">
-            <img src="/hero_banner.png" alt="Premium Learning Platform" className="hero-img" />
+            <img src={`${import.meta.env.BASE_URL}hero_banner.png`} alt="Premium Learning Platform" className="hero-img" />
             <div className="hero-card hero-card-1">
               <span className="hc-icon">🏆</span>
               <div>
