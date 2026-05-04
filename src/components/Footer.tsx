@@ -2,7 +2,7 @@ import React from 'react';
 import './Footer.css';
 
 interface FooterProps {
-  onNavigate: (page: 'home' | 'privacy' | 'terms' | 'refund') => void;
+  onNavigate: (page: 'home' | 'privacy' | 'terms' | 'refund' | 'auth' | 'course') => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => (

@@ -1,18 +1,27 @@
 import React from 'react';
 import type { Course } from '../data/courses';
+import { useAuth } from '../context/AuthContext';
+import { useEnrollment } from '../hooks/useEnrollment';
 import './CourseCard.css';
 
-interface Props { course: Course; }
+interface Props {
+  course: Course;
+  onEnroll: (course: Course) => void;
+}
 
-const CourseCard: React.FC<Props> = ({ course }) => {
+const CourseCard: React.FC<Props> = ({ course, onEnroll }) => {
+  const { user } = useAuth();
+  const { isEnrolled } = useEnrollment();
   const formatNum = (n: number) => n >= 1000 ? (n / 1000).toFixed(1) + 'K' : n.toString();
+  
+  const enrolled = user && isEnrolled(course.id);
 
   return (
     <div className="course-card">
       <div className="card-img-wrap">
         <img src={course.image} alt={course.title} className="card-img" loading="lazy" />
         <div className="card-overlay">
-          <button className="preview-btn">▶ Preview</button>
+          <button className="preview-btn" onClick={() => onEnroll(course)}>▶ Preview</button>
         </div>
         {course.isBestseller && <span className="card-tag tag-gold">🔥 Bestseller</span>}
         {course.isNew && <span className="card-tag tag-blue">✨ New</span>}
@@ -75,7 +84,9 @@ const CourseCard: React.FC<Props> = ({ course }) => {
             </>
           )}
         </div>
-        <button className="btn btn-primary enroll-btn">Enroll Now</button>
+        <button className="btn btn-primary enroll-btn" onClick={() => onEnroll(course)}>
+          {enrolled ? 'Continue Learning' : 'Enroll Now'}
+        </button>
       </div>
     </div>
   );

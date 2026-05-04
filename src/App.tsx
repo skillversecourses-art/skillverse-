@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { useAuth } from './context/AuthContext';
+import type { Course } from './data/courses';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import CoursesSection from './components/CoursesSection';
@@ -7,8 +9,12 @@ import Footer from './components/Footer';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import RefundPolicy from './components/RefundPolicy';
+import AuthPage from './components/AuthPage';
+import CoursePlayer from './components/CoursePlayer';
+import Checkout from './components/Checkout';
+import { useEnrollment } from './hooks/useEnrollment';
 
-type Page = 'home' | 'privacy' | 'terms' | 'refund';
+type Page = 'home' | 'privacy' | 'terms' | 'refund' | 'auth' | 'course' | 'checkout';
 
 const features = [
   { icon: '🎯', title: 'Expert Instructors', desc: 'Learn from top industry professionals with 10+ years of experience.' },
@@ -26,15 +32,75 @@ const testimonials = [
 ];
 
 const App: React.FC = () => {
+  const { user } = useAuth();
+  const { isEnrolled, enrollInCourse } = useEnrollment();
   const [page, setPage] = useState<Page>('home');
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   // Scroll to top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
 
-  const goHome = () => setPage('home');
+  // When user signs in and was trying to enroll, go to course player or checkout
+  useEffect(() => {
+    if (user && page === 'auth' && selectedCourse) {
+      if (isEnrolled(selectedCourse.id)) {
+        setPage('course');
+      } else if (selectedCourse.price > 0) {
+        setPage('checkout');
+      } else {
+        enrollInCourse(selectedCourse.id);
+        setPage('course');
+      }
+    }
+  }, [user, page, selectedCourse, isEnrolled, enrollInCourse]);
 
+  const goHome = () => {
+    setPage('home');
+    setSelectedCourse(null);
+  };
+
+  // Handle enrollment: if signed in, go to checkout/player; otherwise go to auth
+  const handleEnroll = (course: Course) => {
+    setSelectedCourse(course);
+    if (user) {
+      if (isEnrolled(course.id)) {
+        setPage('course');
+      } else if (course.price > 0) {
+        setPage('checkout');
+      } else {
+        enrollInCourse(course.id);
+        setPage('course');
+      }
+    } else {
+      setPage('auth');
+    }
+  };
+
+  // Auth page
+  if (page === 'auth') return (
+    <AuthPage
+      onBack={goHome}
+      initialMode="signin"
+    />
+  );
+
+  // Course player (protected)
+  if (page === 'course' && selectedCourse && user) return (
+    <CoursePlayer course={selectedCourse} onBack={goHome} />
+  );
+
+  // Checkout page (protected)
+  if (page === 'checkout' && selectedCourse && user) return (
+    <Checkout 
+      course={selectedCourse} 
+      onBack={() => setPage('home')} 
+      onSuccess={() => setPage('course')} 
+    />
+  );
+
+  // Legal pages
   if (page === 'privacy') return (
     <>
       <Navbar onNavigate={setPage} currentPage={page} />
@@ -82,7 +148,7 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      <CoursesSection />
+      <CoursesSection onEnroll={handleEnroll} />
 
       {/* Testimonials */}
       <section className="testimonials-section" id="instructors">

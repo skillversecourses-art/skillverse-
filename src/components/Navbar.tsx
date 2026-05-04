@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
+type Page = 'home' | 'privacy' | 'terms' | 'refund' | 'auth' | 'course';
+
 interface NavbarProps {
-  onNavigate: (page: 'home' | 'privacy' | 'terms' | 'refund') => void;
+  onNavigate: (page: Page) => void;
   currentPage?: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage = 'home' }) => {
+  const { user, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -24,6 +28,11 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage = 'home' }) => 
       const el = document.getElementById(sectionId);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    onNavigate('home');
   };
 
   return (
@@ -49,8 +58,26 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage = 'home' }) => 
           <button className="icon-btn" onClick={() => setSearchOpen(!searchOpen)} aria-label="Search">
             <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           </button>
-          <a href="#" className="btn btn-outline" style={{padding:'8px 18px',fontSize:'13px'}}>Sign In</a>
-          <a href="#" className="btn btn-primary" style={{padding:'8px 18px',fontSize:'13px'}}>Get Started</a>
+          {user ? (
+            <>
+              <div className="nav-user-pill">
+                <span className="nav-user-avatar">{(user.user_metadata?.full_name || user.email || '?')[0].toUpperCase()}</span>
+                <span className="nav-user-name">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+              </div>
+              <button className="btn btn-outline" style={{padding:'8px 18px',fontSize:'13px'}} onClick={handleSignOut}>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-outline" style={{padding:'8px 18px',fontSize:'13px'}} onClick={() => onNavigate('auth')}>
+                Sign In
+              </button>
+              <button className="btn btn-primary" style={{padding:'8px 18px',fontSize:'13px'}} onClick={() => onNavigate('auth')}>
+                Get Started
+              </button>
+            </>
+          )}
         </div>
 
         <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
@@ -75,8 +102,20 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage = 'home' }) => 
           <button className="mobile-link" onClick={() => handleNavLink('instructors')}>Instructors</button>
           <button className="mobile-link" onClick={() => handleNavLink('pricing')}>Pricing</button>
           <div className="mobile-actions">
-            <a href="#" className="btn btn-outline" style={{width:'100%',justifyContent:'center'}}>Sign In</a>
-            <a href="#" className="btn btn-primary" style={{width:'100%',justifyContent:'center'}}>Get Started</a>
+            {user ? (
+              <>
+                <div className="nav-user-pill" style={{justifyContent:'center'}}>
+                  <span className="nav-user-avatar">{(user.user_metadata?.full_name || user.email || '?')[0].toUpperCase()}</span>
+                  <span className="nav-user-name">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+                </div>
+                <button className="btn btn-outline" style={{width:'100%',justifyContent:'center'}} onClick={handleSignOut}>Sign Out</button>
+              </>
+            ) : (
+              <>
+                <button className="btn btn-outline" style={{width:'100%',justifyContent:'center'}} onClick={() => { setMenuOpen(false); onNavigate('auth'); }}>Sign In</button>
+                <button className="btn btn-primary" style={{width:'100%',justifyContent:'center'}} onClick={() => { setMenuOpen(false); onNavigate('auth'); }}>Get Started</button>
+              </>
+            )}
           </div>
         </div>
       )}

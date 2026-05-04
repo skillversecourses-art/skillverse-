@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { courses, categories } from '../data/courses';
+import type { Course } from '../data/courses';
 import CourseCard from './CourseCard';
 import './CoursesSection.css';
 
@@ -7,7 +8,11 @@ const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 const PRICE_FILTERS = ['All', 'Free', 'Paid'];
 const SORT_OPTIONS = ['Most Popular', 'Highest Rated', 'Newest', 'Price: Low to High', 'Price: High to Low'];
 
-const CoursesSection: React.FC = () => {
+interface CoursesSectionProps {
+  onEnroll: (course: Course) => void;
+}
+
+const CoursesSection: React.FC<CoursesSectionProps> = ({ onEnroll }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeLevel, setActiveLevel] = useState('All');
   const [priceFilter, setPriceFilter] = useState('All');
@@ -94,7 +99,7 @@ const CoursesSection: React.FC = () => {
           </div>
         ) : (
           <div className="courses-grid">
-            {paginated.map(c => <CourseCard key={c.id} course={c} />)}
+            {paginated.map(c => <CourseCard key={c.id} course={c} onEnroll={onEnroll} />)}
           </div>
         )}
 

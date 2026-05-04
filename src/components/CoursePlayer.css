@@ -1,0 +1,408 @@
+/* ===== Course Player ===== */
+.player-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Bar */
+.player-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(13,21,53,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(79,142,247,0.12);
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.player-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
+}
+.player-back-btn {
+  background: rgba(79,142,247,0.08);
+  border: 1px solid rgba(79,142,247,0.15);
+  border-radius: 10px;
+  color: var(--text-primary);
+  padding: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+  display: flex;
+}
+.player-back-btn:hover {
+  background: rgba(79,142,247,0.15);
+  border-color: var(--accent-blue);
+  transform: translateX(-2px);
+}
+
+.player-course-info { min-width: 0; }
+.player-course-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.player-course-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.player-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+/* Progress */
+.player-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.player-progress-bar {
+  width: 120px;
+  height: 6px;
+  background: rgba(79,142,247,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.player-progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.player-progress-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-blue-bright);
+  min-width: 32px;
+}
+
+/* User info */
+.player-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.player-user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+.player-signout-btn {
+  background: none;
+  border: 1px solid rgba(239,68,68,0.2);
+  color: #f87171;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.player-signout-btn:hover {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.4);
+}
+
+/* Content layout */
+.player-content {
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+.player-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.player-main.full-width {
+  max-width: 100%;
+}
+
+/* Video */
+.player-video-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  position: relative;
+}
+.player-video {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.player-video-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #0a0f2e 0%, #050816 100%);
+  gap: 12px;
+}
+.pvp-icon {
+  font-size: 56px;
+  animation: pvpPulse 2s ease-in-out infinite;
+}
+@keyframes pvpPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.pvp-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.pvp-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Lesson info below video */
+.player-lesson-info {
+  padding: 24px 28px;
+  border-bottom: 1px solid rgba(79,142,247,0.08);
+}
+.pli-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.pli-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(79,142,247,0.1);
+  border: 1px solid rgba(79,142,247,0.2);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--accent-blue-bright);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.pli-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.pli-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.pli-duration {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: rgba(79,142,247,0.06);
+  padding: 8px 14px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pli-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Sidebar toggle */
+.player-sidebar-toggle {
+  position: absolute;
+  right: 360px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(13,21,53,0.95);
+  border: 1px solid rgba(79,142,247,0.2);
+  border-radius: 8px 0 0 8px;
+  color: var(--text-secondary);
+  padding: 12px 6px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+}
+.player-sidebar-toggle:hover {
+  color: var(--accent-blue-bright);
+  background: rgba(79,142,247,0.1);
+}
+
+/* Sidebar */
+.player-sidebar {
+  width: 360px;
+  background: rgba(13,21,53,0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(79,142,247,0.1);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.player-sidebar-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(79,142,247,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.psb-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.psb-count {
+  font-size: 12px;
+  color: var(--accent-blue-bright);
+  font-weight: 600;
+}
+
+.player-lessons-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.player-lesson-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 2px;
+}
+.player-lesson-item:hover {
+  background: rgba(79,142,247,0.06);
+  border-color: rgba(79,142,247,0.1);
+}
+.player-lesson-item.active {
+  background: rgba(79,142,247,0.1);
+  border-color: rgba(79,142,247,0.25);
+}
+.player-lesson-item.completed .pli-lesson-title {
+  color: var(--text-secondary);
+}
+
+.pli-num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(79,142,247,0.06);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.player-lesson-item.active .pli-num {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.pli-text {
+  flex: 1;
+  min-width: 0;
+}
+.pli-lesson-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pli-lesson-dur {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  display: block;
+}
+
+.pli-playing {
+  color: var(--accent-blue-bright);
+  font-size: 10px;
+  flex-shrink: 0;
+  animation: pliPulse 1.5s ease-in-out infinite;
+}
+@keyframes pliPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .player-sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 200;
+    box-shadow: -8px 0 40px rgba(0,0,0,0.6);
+  }
+  .player-sidebar-toggle {
+    right: 0;
+    border-radius: 8px 0 0 8px;
+  }
+  .player-topbar {
+    flex-wrap: wrap;
+  }
+  .player-progress-wrap {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .player-sidebar { width: 100%; }
+  .player-topbar { padding: 10px 14px; }
+  .player-course-title { font-size: 13px; }
+  .player-lesson-info { padding: 18px 16px; }
+  .pli-title { font-size: 18px; }
+  .pli-actions { flex-direction: column; }
+  .pli-actions .btn { width: 100%; justify-content: center; }
+}
