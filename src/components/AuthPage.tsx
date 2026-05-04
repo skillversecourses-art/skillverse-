@@ -43,7 +43,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onBack, initialMode = 'signin' }) =
           setSuccess('Account created! Please check your email to verify your account, then sign in.');
           setMode('signin');
           setPassword('');
-        }
+        } 
       } else {
         const { error } = await signIn(email, password);
         if (error) {
