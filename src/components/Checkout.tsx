@@ -29,38 +29,8 @@ const Checkout: React.FC<Props> = ({ course, onBack, onSuccess }) => {
   const handlePayment = () => {
     setIsProcessing(true);
 
-    // This is the actual Razorpay configuration code.
-    // Since you don't have an approved gateway yet, we will simulate it.
-    // When you are ready, replace the "rzp_test_YOUR_KEY_HERE" with your actual key
-    // and uncomment the rzp1.open() line below.
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _options = {
-      key: 'rzp_test_YOUR_KEY_HERE', // Enter the Key ID generated from the Dashboard
-      amount: course.price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      currency: 'INR',
-      name: 'SkillVerse',
-      description: `Enrollment for ${course.title}`,
-      image: 'https://funcchofpsexcbohpvyd.supabase.co/storage/v1/object/public/public/logo.png', // Optional logo
-      handler: function (response: any) {
-        // Payment successful
-        console.log('Payment ID:', response.razorpay_payment_id);
-        enrollInCourse(course.id);
-        setIsProcessing(false);
-        setIsSuccess(true);
-      },
-      prefill: {
-        name: 'User Name', // Can be dynamically filled
-        email: 'user@example.com', // Can be dynamically filled
-        contact: '9999999999' // Can be dynamically filled
-      },
-      theme: {
-        color: '#2563eb'
-      }
-    };
-
     // --- SIMULATION FOR NOW ---
-    // Remove this setTimeout and uncomment the real Razorpay code when ready.
+    // Remove this setTimeout and uncomment the real Razorpay code below when ready.
     setTimeout(() => {
       enrollInCourse(course.id);
       setIsProcessing(false);
@@ -68,14 +38,39 @@ const Checkout: React.FC<Props> = ({ course, onBack, onSuccess }) => {
     }, 2000);
 
     /* --- REAL RAZORPAY CODE ---
+    // When you have an approved Razorpay gateway, replace "rzp_test_YOUR_KEY_HERE"
+    // with your actual key and uncomment this block.
+    const options = {
+      key: 'rzp_test_YOUR_KEY_HERE',
+      amount: course.price * 100,
+      currency: 'INR',
+      name: 'SkillVerse',
+      description: `Enrollment for ${course.title}`,
+      image: 'https://funcchofpsexcbohpvyd.supabase.co/storage/v1/object/public/public/logo.png',
+      handler: function (response: any) {
+        console.log('Payment ID:', response.razorpay_payment_id);
+        enrollInCourse(course.id);
+        setIsProcessing(false);
+        setIsSuccess(true);
+      },
+      prefill: {
+        name: 'User Name',
+        email: 'user@example.com',
+        contact: '9999999999'
+      },
+      theme: {
+        color: '#2563eb'
+      }
+    };
+
     try {
       const rzp1 = new (window as any).Razorpay(options);
-      
+
       rzp1.on('payment.failed', function (response: any) {
         alert('Payment Failed: ' + response.error.description);
         setIsProcessing(false);
       });
-      
+
       rzp1.open();
     } catch (error) {
       console.error("Razorpay SDK not loaded", error);
