@@ -34,7 +34,8 @@ const Checkout: React.FC<Props> = ({ course, onBack, onSuccess }) => {
     // When you are ready, replace the "rzp_test_YOUR_KEY_HERE" with your actual key
     // and uncomment the rzp1.open() line below.
 
-    const options = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _options = {
       key: 'rzp_test_YOUR_KEY_HERE', // Enter the Key ID generated from the Dashboard
       amount: course.price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
       currency: 'INR',
